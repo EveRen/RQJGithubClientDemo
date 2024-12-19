@@ -1,0 +1,32 @@
+/* 
+  Localizable.strings
+  RQJGithubClientDemo
+
+  Created by 任泡泡🫧 on 2024/12/19.
+  
+*/
+
+// Login
+"login" = "登录";
+"logout" = "退出";
+"loginWithBiometry" = "生物认证登录";
+"authError" = "认证错误";
+"confirm" = "确定";
+"authSuccess" = "登录成功！";
+
+// Home
+"home" = "首页";
+"exploreRepositories" = "Explore Repositories";
+
+// Error
+"errorTitle" = "错误提示";
+"cancel" = "取消";
+"retry" = "重试";
+"requestError" = "请求失败";
+"noData" = "暂无数据";
+
+
+"" = "";
+"" = "";
+"" = "";
+"" = "";
