@@ -8,10 +8,13 @@
 
 // Login
 "login" = "登录";
+"loginDetail" = "从2021年8月13日开始，GitHub不再支持使用密码进行第三方应用的认证。这意味着，开发者需要使用其他认证方法，如OAuth 2.0或个人访问令牌（Personal Access Tokens）。";
 "logout" = "退出";
 "loginWithBiometry" = "生物认证登录";
-"loginWithUP" = "用户名密码登录";
-"loginWithWeb" = "Github网页登录";
+"loginWithBiometryDetail" = "生物认证登录成功后，将使用默认或已保存的个人访问令牌（Personal Access Tokens）进行登录";
+"loginWithWeb" = "使用OAuth 2.0登录GitHub";
+"loginWithPAT" = "个人访问令牌登录";
+"personalAccessTokens" = "个人访问令牌";
 "authError" = "认证错误";
 "confirm" = "确定";
 "authSuccess" = "登录成功！";
@@ -26,6 +29,9 @@
 "retry" = "重试";
 "requestError" = "请求失败";
 "noData" = "暂无数据";
+
+// Search
+"search" = "搜索";
 
 
 "" = "";

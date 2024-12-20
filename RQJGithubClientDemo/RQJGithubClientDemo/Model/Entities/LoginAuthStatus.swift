@@ -11,7 +11,8 @@ enum LoginAuthStatus {
     case unKnown
     case isAuthenticating
     case isAuthenticated
-    case isLoggedin
+    case isLogging
+    case isLoggedin(User)
     case error(String)
 
     var isLoggedin: Bool {

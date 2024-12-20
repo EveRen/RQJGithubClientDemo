@@ -7,20 +7,20 @@
 
 import Foundation
 
-class RepositoryListViewModel: ObservableObject, RepositoryListService {
+class RepositoryListViewModel: ObservableObject {
+    private let repositoriesService: RepositoriesServiceProtocol
     @Published var status: DataStatus<[Repository]> = .unKnown
 
+    init(repositoriesService: RepositoriesServiceProtocol = RepositoriesService()) {
+        self.repositoriesService = repositoriesService
+    }
+    
     @MainActor
     func fetchRepositories() async {
-        guard let url = URL(string: "https://api.github.com/repositories?since=1&visibility=all") else {
-            status = .error(AppString.requestError.localizedText)
-            return
-        }
         status = .isLoading
         do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            let decodedRepositories = try JSONDecoder().decode([Repository].self, from: data)
-            status = .success(decodedRepositories)
+            let repos = try await repositoriesService.fetchRepositories()
+            status = .success(repos)
         } catch {
             status = .error(error.localizedDescription)
         }

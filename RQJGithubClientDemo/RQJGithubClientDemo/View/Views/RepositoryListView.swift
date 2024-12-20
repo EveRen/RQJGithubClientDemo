@@ -83,7 +83,7 @@ struct RepositoryRow: View {
             Text(repository.description ?? "")
                 .font(.subheadline)
                 .foregroundColor(.gray)
-            Text(repository.description ?? "")
+            Text(repository.updated_at ?? "")
                 .font(.caption)
         }
     }

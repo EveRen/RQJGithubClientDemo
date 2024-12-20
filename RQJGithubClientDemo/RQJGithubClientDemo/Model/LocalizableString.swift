@@ -10,9 +10,12 @@ import Foundation
 enum AppString: String {
     case login
     case logout
+    case loginDetail
     case loginWithBiometry
+    case loginWithBiometryDetail
     case loginWithWeb
-    case loginWithUP
+    case loginWithPAT
+    case personalAccessTokens
     case authError
     case confirm
     case authSuccess
@@ -25,6 +28,8 @@ enum AppString: String {
     case retry
     case requestError
     case noData
+    
+    case search
     
     var localizedText: String { NSLocalizedString(self.rawValue, comment: "") }
 }

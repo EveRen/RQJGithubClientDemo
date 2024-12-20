@@ -12,8 +12,7 @@ import LocalAuthentication
 struct LoginView: View {
     @StateObject private var viewModel = LoginViewModel()
     
-    @State private var username = ""
-    @State private var password = ""
+    @State private var personalAccessTokens = ""
 
     @State private var isAuthenticating = false
     @State private var authenticationError: Error? = nil
@@ -23,10 +22,10 @@ struct LoginView: View {
     var body: some View {
         switch viewModel.loginAuthStatus {
         case .unKnown:
-            loginContent
+            ScrollView { loginContent }
             
-        case .isAuthenticating:
-            ProfilePageView()
+        case .isAuthenticating, .isLogging:
+             ProgressView()
             
         case .isAuthenticated:
             ProfilePageView()
@@ -49,31 +48,46 @@ struct LoginView: View {
              .resizable()
              .aspectRatio(contentMode:.fit)
              .frame(width: 100, height: 100)
+             .padding(.vertical, 20)
             
             Text(AppString.login.localizedText)
-             .font(.title)
-            
-            TextField("用户名", text: $username)
-             .textFieldStyle(RoundedBorderTextFieldStyle())
-             .padding(.horizontal, 20)
-            
-            SecureField("密码", text: $password)
-             .textFieldStyle(RoundedBorderTextFieldStyle())
-             .padding(.horizontal, 20)
-            
-            RoundButton(buttonText: AppString.loginWithUP.localizedText, action: loginWithGitHubAPI)
+                .font(.title)
+            Text(AppString.loginDetail.localizedText)
+                .foregroundColor(.gray)
+                .font(.footnote)
+            // oAuth 登录
             RoundButton(buttonText: AppString.loginWithWeb.localizedText, action: loginWithGitHubAPI)
-            RoundButton(buttonText: AppString.loginWithBiometry.localizedText, action: authenticate)
+            SecureField(AppString.personalAccessTokens.localizedText, text: $personalAccessTokens)
+             .textFieldStyle(RoundedBorderTextFieldStyle())
+             .padding(.horizontal, 20)
+            // PAT 登录
+            RoundButton(buttonText: AppString.loginWithPAT.localizedText, action: loginWithPAT)
+            // 生物认证
+            RoundButton(buttonText: AppString.loginWithBiometry.localizedText, action: biometryAuthenticate)
+            Text(AppString.loginWithBiometryDetail.localizedText)
+                .foregroundColor(.gray)
+                .font(.footnote)
+            Spacer()
 
         }
      .padding()
     }
     
-    func authenticate() {
-        viewModel.authenticateUser()
+    func biometryAuthenticate() {
+        Task {
+            await viewModel.biometryAuthenticate()
+        }
     }
     
     func loginWithGitHubAPI() {
-        viewModel.startLogin()
+        Task {
+            await viewModel.oAuthAuthenticate()
+        }
+    }
+    
+    func loginWithPAT() {
+        Task {
+            await viewModel.loginWithPAT()
+        }
     }
 }
