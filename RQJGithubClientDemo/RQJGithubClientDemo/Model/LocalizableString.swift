@@ -11,6 +11,8 @@ enum AppString: String {
     case login
     case logout
     case loginWithBiometry
+    case loginWithWeb
+    case loginWithUP
     case authError
     case confirm
     case authSuccess

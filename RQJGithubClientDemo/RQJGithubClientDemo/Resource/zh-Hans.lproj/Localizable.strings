@@ -10,6 +10,8 @@
 "login" = "登录";
 "logout" = "退出";
 "loginWithBiometry" = "生物认证登录";
+"loginWithUP" = "用户名密码登录";
+"loginWithWeb" = "Github网页登录";
 "authError" = "认证错误";
 "confirm" = "确定";
 "authSuccess" = "登录成功！";

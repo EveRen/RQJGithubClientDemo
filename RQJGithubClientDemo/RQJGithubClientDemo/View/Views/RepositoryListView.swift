@@ -12,6 +12,7 @@ struct RepositoryListView: View {
     
     var body: some View {
         contentView
+            .addBoarder()
             .task {
                 await viewModel.fetchRepositories()
             }
@@ -27,7 +28,7 @@ struct RepositoryListView: View {
             ProgressView()
             
         case .success(let models):
-            listView(models)
+            cardView(models)
             
         case .error(let string):
             ErrorPage(errorMessage: string) {
@@ -43,19 +44,27 @@ struct RepositoryListView: View {
         }
     }
     
-    func listView(_ models: [Repository]) -> some View {
+    func cardView(_ models: [Repository]) -> some View {
         VStack {
-            HStack {
-                Text(AppString.exploreRepositories.localizedText)
-                    .font(.title)
-                Spacer()
+            NavigationLink {
+                listView(models)
+            } label: {
+                HeaderView(title: AppString.exploreRepositories.localizedText)
             }
-            .padding(.horizontal)
-            List(models) { repository in
+
+            listView(models)
+        }
+    }
+    
+    func listView(_ models: [Repository]) -> some View {
+        List(models) { repository in
+            NavigationLink {
+                WebView(url: URL(string: repository.html_url ?? "")!)
+            } label: {
                 RepositoryRow(repository: repository)
             }
-            .listStyle(.plain)
         }
+        .listStyle(.plain)
     }
 }
 
@@ -77,11 +86,5 @@ struct RepositoryRow: View {
             Text(repository.description ?? "")
                 .font(.caption)
         }
-    }
-}
-
-struct RepositoryListView_Previews: PreviewProvider {
-    static var previews: some View {
-        RepositoryListView()
     }
 }

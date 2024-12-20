@@ -10,57 +10,70 @@ import Combine
 import LocalAuthentication
 
 struct LoginView: View {
+    @StateObject private var viewModel = LoginViewModel()
+    
+    @State private var username = ""
+    @State private var password = ""
+
     @State private var isAuthenticating = false
     @State private var authenticationError: Error? = nil
     @State private var loginSuccess = false
     @State private var shouldShowAlert = false
     
     var body: some View {
-        VStack {
-            if isAuthenticating {
-                ProgressView()
-            } else {
-                RoundButton(buttonText: AppString.loginWithBiometry.localizedText, action: authenticate)
+        switch viewModel.loginAuthStatus {
+        case .unKnown:
+            loginContent
+            
+        case .isAuthenticating:
+            ProfilePageView()
+            
+        case .isAuthenticated:
+            ProfilePageView()
+            
+        case .isLoggedin:
+            Color.red
+            
+        case .error(let string):
+            ErrorPage(errorMessage: string) {
                 
-                .alert(isPresented: $shouldShowAlert) {
-                    Alert(title: Text("认证错误"), message: Text(authenticationError?.localizedDescription ?? ""), dismissButton: .default(Text("确定")))
-                }
-                if loginSuccess {
-                    Text("登录成功！")
-                        .font(.largeTitle)
-                        .padding()
-                }
+            } onCancel: {
+                viewModel.setToCancel()
             }
         }
+    }
+    
+    var loginContent: some View {
+        VStack(spacing: 20) {
+            Image("logo")
+             .resizable()
+             .aspectRatio(contentMode:.fit)
+             .frame(width: 100, height: 100)
+            
+            Text(AppString.login.localizedText)
+             .font(.title)
+            
+            TextField("用户名", text: $username)
+             .textFieldStyle(RoundedBorderTextFieldStyle())
+             .padding(.horizontal, 20)
+            
+            SecureField("密码", text: $password)
+             .textFieldStyle(RoundedBorderTextFieldStyle())
+             .padding(.horizontal, 20)
+            
+            RoundButton(buttonText: AppString.loginWithUP.localizedText, action: loginWithGitHubAPI)
+            RoundButton(buttonText: AppString.loginWithWeb.localizedText, action: loginWithGitHubAPI)
+            RoundButton(buttonText: AppString.loginWithBiometry.localizedText, action: authenticate)
+
+        }
+     .padding()
     }
     
     func authenticate() {
-        let context = LAContext()
-        var error: NSError?
-        
-        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-            isAuthenticating = true
-            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "用于登录GitHub") { success, evaluateError in
-                self.isAuthenticating = false
-                if let error = evaluateError {
-                    self.authenticationError = error
-                } else {
-                    self.loginWithGitHubAPI()
-                }
-            }
-        } else {
-            authenticationError = error
-        }
+        viewModel.authenticateUser()
     }
     
     func loginWithGitHubAPI() {
-        // 这里应该调用GitHub API进行登录
-        // 为了示例，我们直接设置登录成功
-        loginSuccess = true
+        viewModel.startLogin()
     }
-}
-
-
-#Preview {
-    LoginView()
 }

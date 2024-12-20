@@ -24,12 +24,10 @@ struct HomepageView: View {
     }
     
     var contentView: some View {
-//        ScrollView {
-//            VStack{
-//                RepositoryListView().frame(height: 500)
-//            }
-//        }
-        RepositoryListView()
+        ScrollView {
+            RepositoryListView().frame(height: 500)
+                .padding(.horizontal)
+        }
     }
     
     var profileItem: some View {
