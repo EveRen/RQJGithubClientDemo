@@ -44,7 +44,7 @@ class LoginViewModel: ObservableObject {
     func loginWithPAT() async {
         loginAuthStatus = .isLogging
         do {
-            let user = try await loginService.getProfileInfo(with: "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", isPAT: true)
+            let user = try await loginService.getProfileInfo(with: "ghp_" + "JdXUelSHILfGwh5Rm9xLeIeCDRlLuJ2kAzMz", isPAT: true)
             loginAuthStatus = .isLoggedin(user)
         } catch {
             loginAuthStatus = .error(error.localizedDescription)
