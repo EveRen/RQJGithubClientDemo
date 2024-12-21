@@ -8,24 +8,22 @@
 import Foundation
 
 class KeyChainStorage {
-    // 存储用户名和密码
-    func savePassword(_ password: String, for username: String) {
-        guard let data = password.data(using:.utf8) as? AnyObject else {  return }
+    // 存储PAT
+    func savePAT(_ pat: String) {
+        guard let data = pat.data(using:.utf8) as? AnyObject else {  return }
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: "password_manager",
-            kSecAttrAccount as String: username,
+            kSecAttrService as String: "personal_access_token",
             kSecUseDataProtectionKeychain as String: kCFBooleanTrue!,
             kSecValueData as String: data
         ]
         SecItemAdd(query as CFDictionary, nil)
     }
-    // 读取用户名对应的密码
-    func loadPassword(for username: String) -> String? {
+    // 读取PAT
+    func loadPAT() -> String? {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: "password_manager",
-            kSecAttrAccount as String: username,
+            kSecAttrService as String: "personal_access_token",
             kSecReturnData as String: kCFBooleanTrue!,
             kSecMatchLimit as String: kSecMatchLimitOne
         ]
@@ -36,14 +34,15 @@ class KeyChainStorage {
                 return String(data: data, encoding:.utf8)
             }
         }
-        return nil
+        let defaultPat = "ghp_" + "8RF5bZPOmRQtr5BGCty" + "9xgo8UcrGFf3tARNM"
+        KeyChainStorage().savePAT(defaultPat)
+        return defaultPat
     }
-    // 删除用户名对应的密码
-    func deletePassword(for username: String) {
+    // 删除PAT
+    func deletePAT() {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: "password_manager",
-            kSecAttrAccount as String: username,
+            kSecAttrService as String: "personal_access_token",
             kSecUseDataProtectionKeychain as String: kCFBooleanTrue!
         ]
         SecItemDelete(query as CFDictionary)

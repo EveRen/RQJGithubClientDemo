@@ -33,8 +33,14 @@
 // Search
 "search" = "搜索";
 
-
-"" = "";
-"" = "";
-"" = "";
-"" = "";
+// Profile
+"create" = "创建于";
+"edit" = "编辑头像";
+"follwed" = "粉丝";
+"follwing" = "关注";
+"repoCount" = "仓库";
+"company" = "公司";
+"location" = "地址";
+"blog" = "博客";
+"email" = "邮箱";
+"noValue" = "暂无";

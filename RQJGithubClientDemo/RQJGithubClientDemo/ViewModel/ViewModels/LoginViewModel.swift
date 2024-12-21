@@ -32,8 +32,9 @@ class LoginViewModel: ObservableObject {
     func oAuthAuthenticate() async {
         loginAuthStatus = .isAuthenticating
         do {
-            let token = try await loginService.oAuthAuthenticate()
-            let user = try await loginService.getProfileInfo(with: token, isPAT: false)
+            let code = try await loginService.oAuthAuthenticate()
+            let token = try await loginService.fetchAccessToken(with: code)
+            let user = try await loginService.getProfileInfo(with: token.access_token ?? "", isPAT: false)
             loginAuthStatus = .isLoggedin(user)
         } catch {
             loginAuthStatus = .error(error.localizedDescription)
@@ -41,11 +42,14 @@ class LoginViewModel: ObservableObject {
     }
     
     @MainActor
-    func loginWithPAT() async {
+    func loginWithPAT(_ input: String? = nil) async {
         loginAuthStatus = .isLogging
         do {
-            let user = try await loginService.getProfileInfo(with: "ghp_" + "JdXUelSHILfGwh5Rm9xLeIeCDRlLuJ2kAzMz", isPAT: true)
+            // 如果用户输入则优先使用，否则使用保存的
+            let pat = (input ?? "").isEmpty ? (KeyChainStorage().loadPAT() ?? "") : (input ?? "")
+            let user = try await loginService.getProfileInfo(with: pat, isPAT: true)
             loginAuthStatus = .isLoggedin(user)
+            if let input = input, !input.isEmpty { KeyChainStorage().savePAT(input) }
         } catch {
             loginAuthStatus = .error(error.localizedDescription)
         }
