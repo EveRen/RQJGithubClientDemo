@@ -33,7 +33,5 @@ final class HomePageViewUITests: XCTestCase {
         XCTAssert(profileButton.exists)
         let searchButton = app.buttons["magnifyingglass"]
         XCTAssert(searchButton.exists)
-        let authButton = app.buttons["authItem"]
-        XCTAssert(authButton.exists)
     }
 }

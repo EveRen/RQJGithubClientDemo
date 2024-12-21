@@ -6,36 +6,25 @@
 //
 
 import SwiftUI
-import Combine
-import LocalAuthentication
 
 struct LoginView: View {
-    @StateObject private var viewModel = LoginViewModel()
-    
+    @ObservedObject var viewModel: LoginViewModel
     @State private var personalAccessTokens = ""
-
-    @State private var isAuthenticating = false
-    @State private var authenticationError: Error? = nil
-    @State private var loginSuccess = false
-    @State private var shouldShowAlert = false
     
     var body: some View {
         switch viewModel.loginAuthStatus {
         case .unKnown:
             ScrollView { loginContent }
             
-        case .isAuthenticating, .isLogging:
-             ProgressView()
+        case .isAuthenticating, .isLogging, .isAuthenticated:
+            ProgressView()
             
-        case .isAuthenticated:
-            ProfilePageView()
-            
-        case .isLoggedin:
-            Color.red
+        case .isLoggedin(let user):
+            ProfilePageView(viewModel: viewModel, userInfo: user)
             
         case .error(let string):
             ErrorPage(errorMessage: string) {
-                
+                viewModel.setToCancel()
             } onCancel: {
                 viewModel.setToCancel()
             }
@@ -87,7 +76,7 @@ struct LoginView: View {
     
     func loginWithPAT() {
         Task {
-            await viewModel.loginWithPAT()
+            await viewModel.loginWithPAT(personalAccessTokens)
         }
     }
 }

@@ -21,7 +21,7 @@ class SearchViewModel: ObservableObject {
         status = .isLoading
         do {
             let repos = try await repositoriesService.searchRepository(searchText)
-            status = .success(repos)
+            status = repos.isEmpty ? .noData : .success(repos)
         } catch {
             status = .error(error.localizedDescription)
         }

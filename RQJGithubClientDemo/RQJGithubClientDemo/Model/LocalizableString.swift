@@ -19,17 +19,24 @@ enum AppString: String {
     case authError
     case confirm
     case authSuccess
-    
     case home
     case exploreRepositories
-    
     case errorTitle
     case cancel
     case retry
     case requestError
     case noData
-    
     case search
+    case create
+    case edit
+    case follwed
+    case follwing
+    case repoCount
+    case company
+    case location
+    case blog
+    case email
+    case noValue
     
     var localizedText: String { NSLocalizedString(self.rawValue, comment: "") }
 }
